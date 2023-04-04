@@ -53,7 +53,7 @@
 #include "catback.xbm"
 #include "catwhite.xbm"
 #include "cattie.xbm"
-#include "eyes.xbm"    
+#include "eyes.xbm"
 #include "tail.xbm"
 
 /*
@@ -94,8 +94,8 @@ static int    clockMode;                /*  One of the above :-)        */
 /*
  *  Cat body part pixmaps
  */
-static Pixmap   *eyePixmap  = (Pixmap *)NULL;     /*  Array of eyes     */
-static Pixmap   *tailPixmap = (Pixmap *)NULL;     /*  Array of tails    */
+static Pixmap   *eyePixmap     = (Pixmap *)NULL;     /*  Array of eyes     */
+static Pixmap   *tailPixmap    = (Pixmap *)NULL;     /*  Array of tails    */
 
 /*
  *  Cat GC's
@@ -1638,7 +1638,7 @@ static void UpdateEyesAndTail()
                0, DEF_CAT_BOTTOM + 1, 0x1);
     XCopyPlane(dpy, eyePixmap[curTail], clockWindow,
                eyeGC, 0, 0, eyes_width, eyes_height,
-               49, 30, 0x1);
+               49, 55, 0x1);
 
     /*
      *  Figure out which tail & eyes are next
@@ -1844,8 +1844,32 @@ static Pixmap CreateTailPixmap(t)
     /*
      *  Create pixmap for drawing tail (and stippling on update)
      */
+    XRectangle rects[] = {
+    	{ 0,  20, 150, 69 },
+    	{ 43, 17, 15,  3  },
+    	{ 43, 14, 10,  3  },
+    	
+    	{ 68, 17, 82, 3  },
+    	{ 86, 8,  9,  10 },
+    	{ 83, 14, 3,  2  },
+    	{ 76, 16, 10, 2  },
+    	{ 88, 6,  2,  2  }
+    };
+    XSetClipRectangles(dpy, bitmapGC, 0, 0, rects, 8, Unsorted);
     XDrawLines(dpy, tailBitmap, bitmapGC,
                newTail, N_TAIL_PTS, CoordModeOrigin);
+
+    // not proud of this tbh
+    // XPoint tailMask[6] = {
+        // { 37,  0 },
+        // { 58, 18 },
+        // { 69, 20 },
+        // { 82, 16 },
+        // { 98, 18 },
+        // { 98,  0 }
+    // };
+    // XSetForeground(dpy, bitmapGC, BlackPixel(dpy, screen));
+    // XFillPolygon(dpy, tailBitmap, bitmapGC, tailMask, 6, Nonconvex, CoordModeOrigin);
 
     XFreeGC(dpy, bitmapGC);
     
@@ -1948,6 +1972,19 @@ static Pixmap CreateEyePixmap(t)
         pts[j].x += 31;
     }
     XFillPolygon(dpy, eyeBitmap, bitmapGC, pts, i, Nonconvex, CoordModeOrigin);
+
+    // throw some diagonal shine on the eyes. or maybe its a screw slit? who
+    // really knows.
+    XPoint eyeShinePoints[4] = {
+        { 2,  12 },
+        { 0,   4 },
+        { 18, -8 },
+        { 0,  -4 }
+    };
+    XSetForeground(dpy, bitmapGC, BlackPixel(dpy, screen));
+    XFillPolygon(dpy, eyeBitmap, bitmapGC, eyeShinePoints, 4, Nonconvex, CoordModePrevious);
+    eyeShinePoints[0].x += eyes_width - 22;
+    XFillPolygon(dpy, eyeBitmap, bitmapGC, eyeShinePoints, 4, Nonconvex, CoordModePrevious);
     
     XFreeGC(dpy, bitmapGC);
 

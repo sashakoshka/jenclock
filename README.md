@@ -2,8 +2,10 @@
   <img src="catclock.gif">
 </p>
 
-catclock
+jenclock
 ========
+
+Catclock but instead of a kit cat clock its Jenny.
 
 This is a version of the X Window System xclock program, which has been enhanced with a "cat mode". Originally an X10 program by Tony Della Fera (MIT-Athena, DEC), Dave Mankins (MIT-Athena, BBN) and Ed Moy (UC Berkeley), Deanna Hohn and I (at Digital Equipment Corporation) crafted this for our own entertainment in the late 1980's. The graphics were inspired by the famous, indeed iconic, Kit-Cat (R) clock, one of which still hangs in my kitchen. I've put this up on github in honor of this year being the 30th anniversary of the introduction of X10, and because it's a fun desktop toy.
 
